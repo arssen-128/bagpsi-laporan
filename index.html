@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BAGPSI REPORT</title>
+  <link rel="stylesheet" href="gaya.css">
+</head>
+<body>
+  <header class="atas">
+    <div>
+      <p class="instansi">Bagpsi Ro SDM Polda Banten</p>
+      <h1>Buat Laporan</h1>
+    </div>
+    <p class="catatan">Draf tersimpan di HP ini saja. HP lain tidak melihatnya. Saat halaman dibuka lagi, isian yang sama muncul kembali.</p>
+    <button type="button" class="garis" id="baru">Hapus draf di HP ini</button>
+  </header>
+  <main class="lembar">
+    <section class="kartu">
+      <label for="jenis">Jenis laporan</label>
+      <select id="jenis">
+        <option value="karo_sdm">KARO SDM</option>
+        <option value="karopsi">KAROPSI</option>
+      </select>
+      <label for="penerima">Penerima</label>
+      <input id="penerima" value="Yth. KARO SDM POLDA BANTEN">
+      <label for="pembuka">Salam pembuka</label>
+      <textarea id="pembuka">Dengan hormat,
+Bersama ini disampaikan laporan kegiatan sebagai berikut.</textarea>
+      <label for="penutup">Salam penutup</label>
+      <textarea id="penutup">Demikian disampaikan, atas perhatiannya diucapkan terima kasih.</textarea>
+    </section>
+    <div id="daftar"></div>
+    <button type="button" class="garis" id="tambah">Tambah kegiatan</button>
+  </main>
+  <aside class="pratinjau">
+    <div class="kepala-pratinjau">
+      <h2>Teks laporan</h2>
+      <button type="button" id="salin">Salin</button>
+    </div>
+    <pre id="hasil"></pre>
+  </aside>
+  <template id="tpl">
+    <article class="kartu kegiatan">
+      <div class="baris-judul">
+        <h2 class="judul-kegiatan">Kegiatan</h2>
+        <button type="button" class="teks hapus">Hapus</button>
+      </div>
+      <label>Nama kegiatan</label>
+      <input class="nama">
+      <div class="empat">
+        <div><label>Tanggal</label><input class="tanggal" type="date"></div>
+        <div><label>Hari</label><input class="hari" readonly></div>
+        <div><label>Jam mulai</label><div class="jam mulai"></div></div>
+        <div><label>Jam selesai</label><div class="jam selesai"></div><label class="centang"><input class="hingga" type="checkbox"> Hingga selesai</label></div>
+      </div>
+      <label>Lokasi</label>
+      <input class="lokasi">
+      <label>Uraian</label>
+      <textarea class="uraian"></textarea>
+      <label>Hasil</label>
+      <textarea class="hasil"></textarea>
+      <h3>Pelaksana</h3>
+      <p class="bantu">Ketik anggota yang tidak ada di database. Urutan mengikuti pangkat, lalu nama.</p>
+      <div class="empat orang">
+        <select class="pangkat"></select>
+        <input class="nama-orang" placeholder="Nama">
+        <input class="gelar" placeholder="Gelar, kalau ada">
+        <input class="jabatan" placeholder="Jabatan">
+      </div>
+      <button type="button" class="garis tambah-orang">Tambah pelaksana</button>
+      <div class="terpilih"></div>
+    </article>
+  </template>
+  <script src="laporan.js"></script>
+</body>
+</html>
