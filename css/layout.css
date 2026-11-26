@@ -1,0 +1,90 @@
+/* Sidebar */
+.sidebar {
+  position: fixed; inset: 0 auto 0 0; z-index: 50;
+  display: flex; flex-direction: column; width: var(--sidebar-width);
+  padding: 22px 16px 15px; color: #eaf1fa;
+  background: linear-gradient(180deg, #142b4a, #10243e);
+  box-shadow: 5px 0 25px rgba(13,32,55,.08);
+  overflow: hidden;
+}
+.brand { display: flex; align-items: center; gap: 12px; padding: 2px 7px 24px; border-bottom: 1px solid rgba(255,255,255,.12); }
+.brand-mark { flex: 0 0 42px; width: 42px; height: 42px; border: 1px solid rgba(255,255,255,.22); border-radius: 12px; font-size: 15px; }
+.brand strong { display: block; color: #fff; font-size: 14px; letter-spacing: .02em; }
+.brand span { display: block; margin-top: 5px; color: #aebfd3; font-size: 9px; font-weight: 700; letter-spacing: .08em; }
+.sidebar-caption { display: block; color: #91a8c2; font-size: 10px; font-weight: 800; letter-spacing: .12em; }
+.sidebar > .sidebar-caption { margin: 24px 9px 9px; }
+.side-nav { display: grid; gap: 5px; }
+.side-link {
+  display: flex; align-items: center; gap: 12px; min-height: 43px;
+  padding: 10px 12px; color: #c7d4e3; text-decoration: none;
+  border: 1px solid transparent; border-radius: 10px; font-size: 13px; font-weight: 600;
+}
+.side-link:hover, .side-link.active { color: #fff; background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.09); }
+.side-link.active { box-shadow: inset 3px 0 #77b5ff; }
+.side-icon { display: grid; place-items: center; width: 20px; color: #a9c9ec; font-size: 19px; }
+.sidebar-history { display: flex; flex: 1; flex-direction: column; min-height: 0; margin-top: 27px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.12); }
+.history-heading { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin: 0 4px 12px; }
+.history-heading h2 { margin: 5px 0 0; color: #fff; font-size: 15px; }
+.icon-button { width: 34px; height: 34px; color: #dbe8f6; background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.13); border-radius: 9px; font-size: 21px; }
+#daftar-laporan { display: grid; align-content: start; gap: 8px; min-height: 0; padding: 0 3px 10px; overflow: auto; }
+.sidebar .item-riwayat {
+  display: block; width: 100%; min-width: 0; padding: 11px 10px;
+  color: #edf4fc; text-align: left; overflow-wrap: anywhere;
+  background: rgba(255,255,255,.075); border: 1px solid rgba(255,255,255,.10); border-radius: 9px;
+}
+.sidebar .item-riwayat:hover { background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.22); }
+.sidebar .item-riwayat strong { display: block; font-size: 11px; line-height: 1.45; }
+.sidebar .item-riwayat small { display: block; margin-top: 5px; color: #aebfd3; font-size: 10px; line-height: 1.4; }
+.sidebar .bantu { color: #aebfd3; font-size: 11px; }
+.sidebar-footer { display: flex; align-items: center; gap: 8px; padding: 14px 7px 2px; color: #aebfd3; border-top: 1px solid rgba(255,255,255,.12); font-size: 10px; }
+.status-dot { width: 7px; height: 7px; background: #4bd18a; border-radius: 50%; box-shadow: 0 0 0 4px rgba(75,209,138,.12); }
+
+/* Main workspace */
+.main-area { min-height: 100vh; margin-left: var(--sidebar-width); }
+.topbar {
+  position: sticky; top: 0; z-index: 30; display: flex; justify-content: space-between; align-items: center;
+  gap: 18px; min-height: 76px; padding: 12px 28px;
+  background: rgba(255,255,255,.96); border-bottom: 1px solid var(--line);
+  box-shadow: 0 3px 14px rgba(20,43,74,.035); backdrop-filter: blur(12px);
+}
+.topbar-left, .topbar-actions { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.menu-toggle { display: none; }
+.account-block { display: grid; gap: 3px; min-width: 0; }
+.account-label { color: var(--muted); font-size: 9px; font-weight: 800; letter-spacing: .1em; }
+#akun-info { max-width: 360px; overflow: hidden; color: var(--navy); font-size: 13px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+#status-simpan { color: var(--green); font-size: 11px; }
+#status-simpan.status-error { color: var(--red); }
+.topbar-actions { justify-content: flex-end; flex-wrap: wrap; }
+.tombol-utama, .button-secondary, .button-quiet, .button-outline {
+  display: inline-flex; justify-content: center; align-items: center; gap: 7px;
+  min-height: 40px; padding: 9px 14px; border-radius: 9px;
+  font-size: 12px; font-weight: 700; transition: .15s ease;
+}
+.tombol-utama { color: #fff; background: var(--blue); border: 1px solid var(--blue); }
+.tombol-utama:hover { background: var(--blue-dark); }
+.button-secondary { color: var(--navy-2); background: var(--blue-soft); border: 1px solid #d5e5f7; }
+.button-secondary:hover { background: #e2eefb; }
+.button-outline { color: var(--blue-dark); background: #fff; border: 1px solid #b9d0eb; }
+.button-outline:hover { background: var(--blue-soft); }
+.button-quiet { color: #6c7887; background: #fff; border: 1px solid var(--line); }
+.button-quiet:hover { color: var(--red); border-color: #e6c5c5; }
+.content-grid {
+  display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(320px, .85fr);
+  gap: 25px; max-width: 1700px; margin: 0 auto; padding: 28px;
+  align-items: start;
+}
+.editor-column { min-width: 0; }
+.page-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; margin-bottom: 22px; }
+.page-heading h1 { margin: 7px 0 8px; color: var(--navy); font-size: clamp(26px, 2.4vw, 34px); letter-spacing: -.04em; }
+.page-heading .catatan { max-width: 680px; margin: 0; }
+.page-heading > button { flex: 0 0 auto; margin-bottom: 2px; }
+.kartu { min-width: 0; margin-bottom: 16px; padding: 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); }
+.section-heading, .activity-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 15px; }
+.section-kicker { color: #7b8ba0; font-size: 9px; font-weight: 800; letter-spacing: .12em; }
+.section-heading h2, .activity-heading h2, .preview-heading h2 { margin: 5px 0 0; color: var(--navy); font-size: 18px; }
+.field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 14px; min-width: 0; }
+.field-grid-four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.field, .field-full { min-width: 0; }
+.field-full { grid-column: 1 / -1; }
+
+.sidebar-backdrop { display: none; }

@@ -1,0 +1,55 @@
+/* Tablet: preview moves below the form */
+@media (max-width: 1150px) {
+  .content-grid { grid-template-columns: minmax(0, 1fr); }
+  .preview-sticky { position: static; }
+  #hasil { min-height: 280px; max-height: 55vh; }
+}
+
+/* Mobile: sidebar becomes an off-canvas drawer */
+@media (max-width: 760px) {
+  :root { --sidebar-width: 280px; }
+  .sidebar { transform: translateX(-102%); transition: transform .22s ease; box-shadow: 12px 0 35px rgba(0,0,0,.20); }
+  #app-shell.sidebar-open .sidebar { transform: translateX(0); }
+  .sidebar-backdrop {
+    position: fixed; inset: 0; z-index: 45; display: block;
+    width: 100%; height: 100%; padding: 0; opacity: 0; visibility: hidden;
+    background: rgba(10,24,42,.48); border: 0; border-radius: 0; transition: .2s ease;
+  }
+  #app-shell.sidebar-open .sidebar-backdrop { opacity: 1; visibility: visible; }
+  .main-area { margin-left: 0; }
+  .topbar { position: sticky; min-height: 68px; padding: 10px 13px; gap: 8px; }
+  .topbar-left { gap: 9px; }
+  .menu-toggle {
+    display: inline-grid; place-items: center; flex: 0 0 38px; width: 38px; height: 38px;
+    color: var(--navy); background: var(--blue-soft); border: 1px solid #d5e5f7; border-radius: 9px; font-size: 19px;
+  }
+  #akun-info { max-width: 170px; font-size: 11px; }
+  #status-simpan { font-size: 10px; }
+  .account-label { font-size: 8px; }
+  .topbar-actions { gap: 6px; }
+  .topbar-actions button { min-height: 36px; padding: 7px 9px; font-size: 10px; }
+  .topbar-actions #laporan-baru { display: none; }
+  .content-grid { padding: 20px 14px 30px; gap: 20px; }
+  .page-heading { align-items: flex-start; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+  .page-heading h1 { font-size: 27px; }
+  .page-heading > button { min-height: 36px; }
+  .kartu { padding: 15px; border-radius: 12px; }
+  .field-grid, .field-grid-four { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 10px; }
+  .field-grid .field-full { grid-column: 1 / -1; }
+  .empat { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .personnel-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #hasil { min-height: 250px; max-height: 60vh; padding: 15px; font-size: 10px; }
+  .preview-heading h2 { font-size: 17px; }
+  .preview-heading .tombol-utama { min-height: 36px; }
+}
+@media (max-width: 390px) {
+  .topbar { flex-wrap: wrap; align-items: flex-start; }
+  .topbar-left { flex: 1 1 100%; }
+  .topbar-actions { width: 100%; justify-content: flex-end; }
+  #akun-info { max-width: 200px; }
+  .topbar-actions #simpan-cloud { padding: 7px 10px; font-size: 10px; }
+  .field-grid, .field-grid-four, .empat, .personnel-fields { grid-template-columns: minmax(0, 1fr); }
+  .field-grid .field-full { grid-column: 1; }
+  .jam { grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); }
+  .login-card { padding: 24px; }
+}
