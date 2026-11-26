@@ -51,3 +51,12 @@ Tidak ada migrasi SQL yang dijalankan atau diasumsikan.
 
 ## Batas verifikasi paket
 Pemeriksaan yang dilakukan pada paket: sintaks seluruh modul JavaScript, keberadaan aset yang direferensikan HTML, dan resolusi seluruh import lokal. Koneksi live ke Supabase, hak admin, policy RLS, serta deployment GitHub Pages tetap harus diuji menggunakan akun dan project pemilik.
+
+## Update 02 — Master Personel
+- Daftar master personel ditampilkan 12 data per halaman agar tetap ringan pada perangkat mobile.
+- Pencarian mencakup NRP, pangkat, nama, gelar, jabatan, dan bagian/satuan.
+- Ringkasan menampilkan total, aktif, nonaktif, dan jumlah hasil pencarian.
+- Filter status dan pagination bekerja bersama; pencarian/filter mengembalikan daftar ke halaman pertama.
+- Admin dapat menambah, mengedit, dan mengaktifkan/nonaktifkan data. Non-admin tetap dapat melihat database dan memilih personel aktif untuk laporan.
+- Identitas personel yang ditambahkan ke kegiatan disimpan sebagai snapshot pada data laporan, termasuk referensi ID opsional. Perubahan master personel berikutnya tidak mengubah isi laporan historis.
+- Tidak ada perubahan skema tabel atau migrasi SQL pada update ini.

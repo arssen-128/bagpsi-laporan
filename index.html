@@ -185,15 +185,22 @@ Bersama ini disampaikan laporan kegiatan sebagai berikut.</textarea>
             </div>
 
             <div class="master-list-toolbar">
-              <input id="cari-personel" type="search" placeholder="Cari nama, pangkat, NRP, atau jabatan...">
-              <select id="filter-status-personel">
+              <input id="cari-personel" type="search" placeholder="Cari nama, pangkat, NRP, jabatan, atau bagian..." autocomplete="off">
+              <select id="filter-status-personel" aria-label="Filter status personel">
                 <option value="aktif">Personel aktif</option>
                 <option value="semua">Semua status</option>
                 <option value="nonaktif">Nonaktif</option>
               </select>
             </div>
+            <div class="personel-summary" aria-live="polite">
+              <div><span>Total personel</span><strong id="personel-count-total">0</strong></div>
+              <div><span>Aktif</span><strong id="personel-count-active">0</strong></div>
+              <div><span>Nonaktif</span><strong id="personel-count-inactive">0</strong></div>
+              <span id="personel-count-filtered" class="personel-filtered-count">0 hasil</span>
+            </div>
             <p id="personel-status" class="personel-status" role="status" aria-live="polite">Memuat database personel...</p>
             <div id="personel-list" class="personel-list"></div>
+            <nav id="personel-pagination" class="personel-pagination" aria-label="Navigasi halaman personel"></nav>
           </section>
 
           <div id="daftar"></div>
