@@ -47,6 +47,9 @@
         <a class="side-link" href="#area-preview" data-close-sidebar>
           <span class="side-icon">≡</span><span>Pratinjau teks</span>
         </a>
+        <a class="side-link" href="#master-personel" data-close-sidebar data-personel-nav>
+          <span class="side-icon">👥</span><span>Master personel</span>
+        </a>
       </nav>
 
       <section id="riwayat-panel" class="sidebar-history">
@@ -127,6 +130,72 @@ Bersama ini disampaikan laporan kegiatan sebagai berikut.</textarea>
             </div>
           </section>
 
+          <section id="master-personel" class="kartu master-personel-panel" hidden>
+            <div class="master-heading">
+              <div>
+                <span class="section-kicker">DATABASE INDUK</span>
+                <h2>Master Personel</h2>
+                <p class="bantu">Data personel disimpan sekali di Supabase dan dapat dipilih kembali pada setiap kegiatan.</p>
+              </div>
+              <button type="button" id="tutup-master-personel" class="button-outline">Kembali ke laporan</button>
+            </div>
+
+            <div id="personel-admin-area">
+              <form id="personel-form">
+                <input type="hidden" id="personel-id">
+                <div class="field-grid master-form-grid">
+                  <div class="field">
+                    <label for="master-nrp">NRP (opsional)</label>
+                    <input id="master-nrp" maxlength="30" placeholder="Nomor Registrasi Pokok">
+                  </div>
+                  <div class="field">
+                    <label for="master-pangkat">Pangkat</label>
+                    <select id="master-pangkat" required>
+                      <option value="">Pilih pangkat</option>
+                      <option>JENDERAL</option><option>KOMJEN</option><option>IRJEN</option>
+                      <option>BRIGJEN</option><option>KOMBES</option><option>KOMBES POL.</option>
+                      <option>AKBP</option><option>KOMPOL</option><option>AKP</option>
+                      <option>IPTU</option><option>IPDA</option><option>AIPTU</option>
+                      <option>AIPDA</option><option>BRIPKA</option><option>BRIGPOL</option>
+                      <option>BRIPTU</option><option>BRIPDA</option>
+                    </select>
+                  </div>
+                  <div class="field field-full">
+                    <label for="master-nama">Nama lengkap</label>
+                    <input id="master-nama" maxlength="150" required placeholder="Nama personel">
+                  </div>
+                  <div class="field">
+                    <label for="master-gelar">Gelar (opsional)</label>
+                    <input id="master-gelar" maxlength="120" placeholder="S.H., S.Psi., dan sebagainya">
+                  </div>
+                  <div class="field">
+                    <label for="master-jabatan">Jabatan</label>
+                    <input id="master-jabatan" maxlength="150" placeholder="Jabatan personel">
+                  </div>
+                  <div class="field field-full">
+                    <label for="master-bagian">Bagian / satuan</label>
+                    <input id="master-bagian" maxlength="120" placeholder="Contoh: Bagpsi Ro SDM">
+                  </div>
+                </div>
+                <div class="master-form-actions">
+                  <button type="submit" id="simpan-personel" class="tombol-utama">Simpan personel</button>
+                  <button type="button" id="batal-edit-personel" class="button-outline">Kosongkan form</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="master-list-toolbar">
+              <input id="cari-personel" type="search" placeholder="Cari nama, pangkat, NRP, atau jabatan...">
+              <select id="filter-status-personel">
+                <option value="aktif">Personel aktif</option>
+                <option value="semua">Semua status</option>
+                <option value="nonaktif">Nonaktif</option>
+              </select>
+            </div>
+            <p id="personel-status" class="personel-status" role="status" aria-live="polite">Memuat database personel...</p>
+            <div id="personel-list" class="personel-list"></div>
+          </section>
+
           <div id="daftar"></div>
           <div class="add-activity-row">
             <button type="button" class="button-outline" id="tambah">＋ Tambah kegiatan</button>
@@ -189,11 +258,18 @@ Bersama ini disampaikan laporan kegiatan sebagai berikut.</textarea>
             <h3>Pelaksana</h3>
             <p class="bantu">Tambahkan personel yang mengikuti kegiatan. Urutan mengikuti pangkat, lalu nama.</p>
           </div>
+          <div class="field field-full">
+            <label>Pilih personel dari database master</label>
+            <select class="pilih-master-personel">
+              <option value="">Memuat database personel...</option>
+            </select>
+            <p class="bantu">Jika personel belum tersedia, daftarkan terlebih dahulu melalui menu Master Personel.</p>
+          </div>
           <div class="field-grid field-grid-four personnel-fields">
             <div class="field"><label>Pangkat</label><select class="pangkat"></select></div>
-            <div class="field"><label>Nama</label><input class="nama-orang" placeholder="Nama personel"></div>
-            <div class="field"><label>Gelar</label><input class="gelar" placeholder="Jika ada"></div>
-            <div class="field"><label>Jabatan</label><input class="jabatan" placeholder="Jabatan"></div>
+            <div class="field"><label>Nama</label><input class="nama-orang" placeholder="Nama personel" readonly></div>
+            <div class="field"><label>Gelar</label><input class="gelar" placeholder="Jika ada" readonly></div>
+            <div class="field"><label>Jabatan</label><input class="jabatan" placeholder="Jabatan" readonly></div>
           </div>
           <button type="button" class="button-outline tambah-orang">＋ Tambah pelaksana</button>
           <div class="terpilih"></div>
@@ -208,7 +284,7 @@ Bersama ini disampaikan laporan kegiatan sebagai berikut.</textarea>
     window.BAGPSI_SUPABASE_URL = "https://mdxyaowbbnprqvmqmkps.supabase.co";
     window.BAGPSI_SUPABASE_PUBLISHABLE_KEY = "sb_publishable_vhiB4iyFbuKTMXE6HuXSMQ_GTM4i1d4";
   </script>
-  <script src="laporan.js"></script>
+  <script src="laporan.js"></script>\n  <script src="personel.js"></script>
   <script>
     (function () {
       var shell = document.getElementById('app-shell');

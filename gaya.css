@@ -237,3 +237,42 @@ input:focus, select:focus, textarea:focus { outline: 3px solid rgba(52,120,200,.
   .jam { grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); }
   .login-card { padding: 24px; }
 }
+
+
+/* MASTER PERSONEL */
+.master-personel-panel { margin-top: 18px; }
+.master-heading, .master-list-toolbar, .master-form-actions {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.master-heading { margin-bottom: 18px; }
+.master-heading h2 { margin: 4px 0; color: var(--navy); font-size: 21px; }
+.master-heading .bantu { margin: 5px 0 0; }
+.master-form-grid { margin-bottom: 14px; }
+.master-form-actions { justify-content: flex-start; flex-wrap: wrap; }
+.master-list-toolbar { margin: 22px 0 10px; }
+.master-list-toolbar input { flex: 1 1 260px; min-width: 0; }
+.master-list-toolbar select { flex: 0 1 180px; }
+.personel-status { margin: 10px 0; color: var(--muted); font-size: 12px; }
+.personel-status.error { color: #b42318; }
+.personel-list { display: grid; gap: 8px; }
+.personel-row {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff;
+}
+.personel-row-main { min-width: 0; }
+.personel-row-main strong { display: block; color: var(--navy); font-size: 13px; overflow-wrap: anywhere; }
+.personel-row-main small { display: block; margin-top: 4px; color: var(--muted); font-size: 11px; overflow-wrap: anywhere; }
+.personel-row-actions { display: flex; flex: 0 0 auto; flex-wrap: wrap; gap: 6px; }
+.personel-row-actions button { min-height: 32px; padding: 6px 9px; font-size: 11px; }
+.personel-empty { padding: 18px; border: 1px dashed var(--line); border-radius: 10px; color: var(--muted); text-align: center; font-size: 12px; }
+.content-grid.master-view .preview-column { display: none; }
+.content-grid.master-view #area-editor > :not(#master-personel) { display: none !important; }
+#master-personel[hidden] { display: none !important; }
+
+@media (max-width: 760px) {
+  .master-heading { align-items: flex-start; flex-direction: column; }
+  .master-list-toolbar { align-items: stretch; flex-direction: column; }
+  .master-list-toolbar select { flex-basis: auto; width: 100%; }
+  .personel-row { align-items: flex-start; flex-direction: column; }
+  .personel-row-actions { width: 100%; }
+}
