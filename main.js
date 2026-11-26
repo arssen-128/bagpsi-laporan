@@ -1,4 +1,3 @@
-import { initNavigation } from "./features/navigation.js?v=7";
 import { createSupabaseClient } from "./services/supabase.js";
 import { createReportEditor } from "./features/report-editor.js";
 import { createCloudReports } from "./features/cloud-reports.js";
@@ -7,9 +6,6 @@ import { createAuth } from "./features/auth.js";
 import { byId, setStatus } from "./utils/dom.js";
 
 async function startApplication() {
-  // Navigasi harus hidup lebih dulu, tidak boleh menunggu editor/personel.
-  initNavigation();
-
   const loginError = byId("login-error");
   try {
     const client = createSupabaseClient();
