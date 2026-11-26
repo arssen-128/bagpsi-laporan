@@ -38,32 +38,19 @@
 
       <div class="sidebar-caption">MENU UTAMA</div>
       <nav class="side-nav" aria-label="Navigasi utama">
-        <a class="side-link active" href="#area-editor" data-close-sidebar>
+        <a class="side-link active" href="#area-editor" data-close-sidebar data-editor-nav>
           <span class="side-icon">▤</span><span>Buat laporan</span>
         </a>
-        <a class="side-link" href="#riwayat-panel" data-close-sidebar>
+        <a class="side-link" href="#riwayat-panel" data-close-sidebar data-archive-nav>
           <span class="side-icon">▣</span><span>Laporan tersimpan</span>
         </a>
-        <a class="side-link" href="#area-preview" data-close-sidebar>
+        <a class="side-link" href="#area-preview" data-close-sidebar data-editor-nav>
           <span class="side-icon">≡</span><span>Pratinjau teks</span>
         </a>
         <a class="side-link" href="#master-personel" data-close-sidebar data-personel-nav>
           <span class="side-icon">👥</span><span>Master personel</span>
         </a>
       </nav>
-
-      <section id="riwayat-panel" class="sidebar-history">
-        <div class="history-heading">
-          <div>
-            <span class="sidebar-caption">ARSIP ONLINE</span>
-            <h2>Laporan tersimpan</h2>
-          </div>
-          <button type="button" id="muat-ulang" class="icon-button" aria-label="Muat ulang daftar laporan" title="Muat ulang">↻</button>
-        </div>
-        <div id="daftar-laporan">
-          <p class="bantu">Memuat laporan...</p>
-        </div>
-      </section>
 
       <div class="sidebar-footer">
         <span class="status-dot"></span>
@@ -88,7 +75,7 @@
         </div>
       </header>
 
-      <div class="content-grid">
+      <div class="content-grid" id="editor-view">
         <main id="area-editor" class="editor-column">
           <header class="page-heading">
             <div>
@@ -224,6 +211,32 @@ Bersama ini disampaikan laporan kegiatan sebagai berikut.</textarea>
           </div>
         </aside>
       </div>
+
+      <main id="riwayat-panel" class="archive-view" hidden>
+        <header class="page-heading archive-page-heading">
+          <div>
+            <p class="instansi">BAGPSI RO SDM POLDA BANTEN</p>
+            <h1>Laporan Tersimpan</h1>
+            <p class="catatan">Daftar laporan yang tersimpan di database online. Pilih salah satu laporan untuk membuka dan melanjutkan penyuntingan.</p>
+          </div>
+          <div class="archive-actions">
+            <button type="button" id="muat-ulang" class="button-outline">↻ Muat ulang</button>
+            <button type="button" id="buat-laporan-dari-arsip" class="tombol-utama">＋ Buat laporan baru</button>
+          </div>
+        </header>
+        <section class="kartu archive-card">
+          <div class="archive-list-heading">
+            <div>
+              <span class="section-kicker">ARSIP ONLINE</span>
+              <h2>Riwayat laporan</h2>
+            </div>
+            <span class="archive-hint">Maksimal 100 laporan terbaru</span>
+          </div>
+          <div id="daftar-laporan" class="archive-list">
+            <p class="bantu">Memuat laporan...</p>
+          </div>
+        </section>
+      </main>
     </div>
 
     <template id="tpl">

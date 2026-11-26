@@ -60,3 +60,8 @@ Pemeriksaan yang dilakukan pada paket: sintaks seluruh modul JavaScript, keberad
 - Admin dapat menambah, mengedit, dan mengaktifkan/nonaktifkan data. Non-admin tetap dapat melihat database dan memilih personel aktif untuk laporan.
 - Identitas personel yang ditambahkan ke kegiatan disimpan sebagai snapshot pada data laporan, termasuk referensi ID opsional. Perubahan master personel berikutnya tidak mengubah isi laporan historis.
 - Tidak ada perubahan skema tabel atau migrasi SQL pada update ini.
+
+
+## Update 03 — Navigasi Laporan Tersimpan
+
+Menu **Laporan tersimpan** pada sidebar membuka halaman arsip khusus. Daftar arsip dimuat dari tabel `laporan_cloud` sesuai sesi pengguna. Klik salah satu kartu untuk membuka laporan di editor. Tidak ada perubahan skema database atau SQL yang diperlukan.

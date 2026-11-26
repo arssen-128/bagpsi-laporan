@@ -129,6 +129,7 @@ export function createCloudReports({ client, editor, getUser }) {
     editor.load(data.data || {}, { cloud: true });
     loading = false;
     setCloudStatus("Laporan dibuka dari database online");
+    window.dispatchEvent(new CustomEvent("bagpsi:navigate-editor"));
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -153,6 +154,7 @@ export function createCloudReports({ client, editor, getUser }) {
   byId("simpan-cloud").addEventListener("click", () => save(true));
   byId("muat-ulang").addEventListener("click", loadHistory);
   window.addEventListener("bagpsi:new-report", newReport);
+  window.addEventListener("bagpsi:archive-opened", loadHistory);
 
   return {
     scheduleSave,
