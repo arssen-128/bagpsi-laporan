@@ -293,6 +293,23 @@ export function createPersonnelModule({ client }) {
     document.body.addEventListener("change", (event) => {
       if (event.target.classList.contains("pilih-master-personel")) fillSelectedPerson(event.target);
     });
+
+    // Sinkronkan dropdown personel pada setiap kartu kegiatan yang baru dibuat.
+    // Penting saat pengguna berpindah template KARO SDM ke KAROPSI atau sebaliknya.
+    document.addEventListener("bagpsi:activity-added", (event) => {
+      const card = event.detail?.card;
+      const select = card?.querySelector(".pilih-master-personel");
+      if (!select) return;
+      const oldValue = select.value;
+      select.replaceChildren(new Option(records.length ? "Pilih personel…" : "Belum ada personel aktif", ""));
+      records.filter((person) => person.status === "aktif").forEach((person) => {
+        const label = `${person.pangkat} ${person.nama}${person.jabatan ? ` — ${person.jabatan}` : ""}`;
+        select.add(new Option(label, person.id));
+      });
+      if (oldValue && records.some((person) => person.id === oldValue && person.status === "aktif")) {
+        select.value = oldValue;
+      }
+    });
   }
 
   init();

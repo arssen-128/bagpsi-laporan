@@ -123,6 +123,10 @@ export function createReportEditor({ onChange = () => {} } = {}) {
     list.append(card);
     if (data) fillCard(card, data);
     updateNumbers();
+    // Beri tahu modul personel bahwa kartu kegiatan baru sudah masuk DOM.
+    // Ini memastikan dropdown master personel ikut diisi ulang saat template
+    // KARO SDM/KAROPSI diganti atau pengguna menambah kegiatan.
+    document.dispatchEvent(new CustomEvent("bagpsi:activity-added", { detail: { card } }));
     if (!silent) notifyChange();
     return card;
   }
