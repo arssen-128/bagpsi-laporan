@@ -1,23 +1,25 @@
+import { initNavigation } from "./features/navigation.js?v=7";
 import { createSupabaseClient } from "./services/supabase.js";
 import { createReportEditor } from "./features/report-editor.js";
 import { createCloudReports } from "./features/cloud-reports.js";
 import { createPersonnelModule } from "./features/personnel.js";
 import { createAuth } from "./features/auth.js";
-import { initNavigation } from "./features/navigation.js";
 import { byId, setStatus } from "./utils/dom.js";
 
 async function startApplication() {
+  // Navigasi harus hidup lebih dulu, tidak boleh menunggu editor/personel.
+  initNavigation();
+
   const loginError = byId("login-error");
   try {
     const client = createSupabaseClient();
     let currentUser = null;
+    let cloudReports = null;
 
     const editor = createReportEditor({
       onChange: () => cloudReports?.scheduleSave()
     });
 
-    // Deklarasi modul cloud dilakukan sebelum editor dipakai untuk event input.
-    let cloudReports = null;
     cloudReports = createCloudReports({
       client,
       editor,
@@ -44,10 +46,8 @@ async function startApplication() {
     });
 
     editor.init();
-    initNavigation();
     await auth.init();
 
-    // Pastikan tidak ada event handler ganda: auth module mengelola satu subscription.
     window.addEventListener("beforeunload", () => {
       cloudReports.cancelScheduledSave();
       auth.unsubscribe();

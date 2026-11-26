@@ -1,7 +1,7 @@
 /**
  * BAGPSI REPORT — navigasi halaman.
- * Menangani klik menu dengan event delegation pada fase capture agar tidak
- * bergantung pada elemen anak yang diklik (ikon/teks) atau handler lain.
+ * Inisialisasi independen dari editor/personel agar menu arsip tetap berfungsi
+ * walaupun modul lain mengalami error.
  */
 export function initNavigation() {
   const shell = document.getElementById("app-shell");
@@ -12,67 +12,69 @@ export function initNavigation() {
   const backdrop = document.getElementById("sidebar-backdrop");
 
   if (!shell || !editorView || !archiveView || !sideNav) {
-    console.error("BAGPSI: navigasi arsip tidak dapat diinisialisasi. Periksa index.html (app-shell, editor-view, riwayat-panel, side-nav).");
+    console.error("[BAGPSI] Navigasi arsip gagal: elemen app-shell/editor-view/riwayat-panel/side-nav tidak ditemukan.", {
+      shell: !!shell, editorView: !!editorView, archiveView: !!archiveView, sideNav: !!sideNav
+    });
     return;
   }
 
-  const links = [...sideNav.querySelectorAll("a.side-link")];
-
-  function setActive(selector) {
-    const activeLink = sideNav.querySelector(selector);
-    links.forEach((link) => link.classList.toggle("active", link === activeLink));
-  }
+  const navLinks = [...sideNav.querySelectorAll("a.side-link")];
 
   function closeSidebar() {
     shell.classList.remove("sidebar-open");
     sidebarToggle?.setAttribute("aria-expanded", "false");
   }
 
-  function renderPage(page, { updateUrl = true, scroll = true } = {}) {
-    const archive = page === "archive";
+  function setActive(selector) {
+    const active = sideNav.querySelector(selector);
+    navLinks.forEach((link) => link.classList.toggle("active", link === active));
+  }
 
-    // Gunakan atribut hidden dan style display sebagai fallback jika CSS lama
-    // atau stylesheet cache masih menimpa display elemen.
+  function showPage(page, options = {}) {
+    const archive = page === "archive";
+    const updateUrl = options.updateUrl !== false;
+    const scroll = options.scroll !== false;
+
+    // hidden + display inline dipakai bersama agar tidak dikalahkan CSS lama.
     editorView.hidden = archive;
     editorView.style.display = archive ? "none" : "";
     archiveView.hidden = !archive;
     archiveView.style.display = archive ? "block" : "none";
 
-    setActive(archive ? "[data-archive-nav]" : "[data-editor-nav][href='#area-editor']");
+    setActive(archive
+      ? "[data-archive-nav]"
+      : "[data-editor-nav][href='#area-editor']");
 
-    const hash = archive ? "#riwayat-panel" : "#area-editor";
-    if (updateUrl && window.location.hash !== hash) {
-      window.history.pushState({ bagpsiPage: page }, "", hash);
+    const targetHash = archive ? "#riwayat-panel" : "#area-editor";
+    if (updateUrl && window.location.hash !== targetHash) {
+      window.history.pushState({ bagpsiPage: page }, "", targetHash);
     }
 
     if (archive) {
       closeSidebar();
       window.dispatchEvent(new CustomEvent("bagpsi:archive-opened"));
     }
-
     if (scroll) window.scrollTo({ top: 0, behavior: "auto" });
   }
 
-  // Capture-phase delegation: klik pada span/icon tetap dikenali sebagai klik link.
+  // Tangkap klik sebelum handler lain. Klik pada ikon/span tetap terdeteksi.
   document.addEventListener("click", (event) => {
-    const link = event.target instanceof Element
-      ? event.target.closest(".side-nav a.side-link")
-      : null;
+    const target = event.target;
+    const link = target instanceof Element ? target.closest(".side-nav a.side-link") : null;
     if (!link || !sideNav.contains(link)) return;
 
     if (link.hasAttribute("data-archive-nav")) {
       event.preventDefault();
       event.stopImmediatePropagation();
-      renderPage("archive");
+      showPage("archive");
       return;
     }
 
     if (link.hasAttribute("data-editor-nav")) {
       event.preventDefault();
       event.stopImmediatePropagation();
-      renderPage("editor");
+      showPage("editor");
       closeSidebar();
-
       if (link.getAttribute("href") === "#area-preview") {
         document.getElementById("area-preview")?.scrollIntoView({ behavior: "smooth", block: "start" });
       }
@@ -82,7 +84,7 @@ export function initNavigation() {
     if (link.hasAttribute("data-personel-nav")) {
       event.preventDefault();
       event.stopImmediatePropagation();
-      renderPage("editor");
+      showPage("editor");
       closeSidebar();
       document.getElementById("master-personel")?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
@@ -95,23 +97,27 @@ export function initNavigation() {
   backdrop?.addEventListener("click", closeSidebar);
 
   document.getElementById("buat-laporan-dari-arsip")?.addEventListener("click", () => {
-    renderPage("editor");
+    showPage("editor");
     window.dispatchEvent(new CustomEvent("bagpsi:new-report"));
   });
 
-  window.addEventListener("bagpsi:navigate-editor", () => renderPage("editor"));
+  window.addEventListener("bagpsi:navigate-editor", () => showPage("editor"));
   window.addEventListener("popstate", () => {
-    renderPage(window.location.hash === "#riwayat-panel" ? "archive" : "editor", { updateUrl: false });
+    showPage(window.location.hash === "#riwayat-panel" ? "archive" : "editor", {
+      updateUrl: false
+    });
   });
   window.addEventListener("hashchange", () => {
-    renderPage(window.location.hash === "#riwayat-panel" ? "archive" : "editor", { updateUrl: false });
+    showPage(window.location.hash === "#riwayat-panel" ? "archive" : "editor", {
+      updateUrl: false
+    });
   });
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") closeSidebar();
   });
 
-  // Deep link dan refresh pada URL arsip harus membuka halaman arsip.
-  renderPage(window.location.hash === "#riwayat-panel" ? "archive" : "editor", {
+  // Deep-link / refresh langsung ke halaman arsip.
+  showPage(window.location.hash === "#riwayat-panel" ? "archive" : "editor", {
     updateUrl: false,
     scroll: false
   });
