@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#142b4a">
   <title>BAGPSI REPORT</title>
-  <link rel="stylesheet" href="./styles.css?v=8">
+  <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
   <!-- LOGIN: ID dipertahankan agar tetap terhubung dengan laporan.js -->
   <section id="auth-screen" class="auth-screen">
     <form id="login-form" class="login-card">
-      <img class="login-mark" src="./PSI.png" alt="Logo PSI">
+      <div class="login-mark">BR</div>
       <p class="instansi">BAGPSI RO SDM POLDA BANTEN</p>
       <h1>Masuk BAGPSI REPORT</h1>
       <p class="auth-help">Gunakan akun yang terdaftar pada Supabase Authentication.</p>
@@ -29,7 +29,7 @@
 
     <aside id="sidebar" class="sidebar">
       <div class="brand">
-        <img class="brand-mark" src="./PSI.png" alt="Logo PSI">
+        <div class="brand-mark">BR</div>
         <div>
           <strong>BAGPSI REPORT</strong>
           <span>RO SDM POLDA BANTEN</span>
@@ -213,29 +213,55 @@ Bersama ini disampaikan laporan kegiatan sebagai berikut.</textarea>
       </div>
 
       <main id="riwayat-panel" class="archive-view" hidden>
-        <header class="page-heading archive-page-heading">
-          <div>
-            <p class="instansi">BAGPSI RO SDM POLDA BANTEN</p>
-            <h1>Laporan Tersimpan</h1>
-            <p class="catatan">Daftar laporan yang tersimpan di database online. Pilih salah satu laporan untuk membuka dan melanjutkan penyuntingan.</p>
-          </div>
-          <div class="archive-actions">
-            <button type="button" id="muat-ulang" class="button-outline">↻ Muat ulang</button>
-            <button type="button" id="buat-laporan-dari-arsip" class="tombol-utama">＋ Buat laporan baru</button>
-          </div>
-        </header>
-        <section class="kartu archive-card">
-          <div class="archive-list-heading">
+        <header class="archive-heading">
+          <div class="archive-heading-main">
+            <div class="archive-folder" aria-hidden="true">▱</div>
             <div>
-              <span class="section-kicker">ARSIP ONLINE</span>
-              <h2>Riwayat laporan</h2>
+              <h1>Laporan Tersimpan</h1>
+              <p class="archive-subtitle">ARSIP ONLINE · BAGPSI RO SDM POLDA BANTEN</p>
             </div>
-            <span class="archive-hint">Maksimal 100 laporan terbaru</span>
           </div>
-          <div id="daftar-laporan" class="archive-list">
-            <p class="bantu">Memuat laporan...</p>
-          </div>
+          <p class="archive-intro">Daftar laporan yang telah disimpan di database. Klik salah satu laporan untuk membukanya kembali.</p>
+        </header>
+
+        <section class="archive-toolbar" aria-label="Pencarian dan filter laporan">
+          <label class="archive-search">
+            <span aria-hidden="true">⌕</span>
+            <input id="arsip-search" type="search" placeholder="Cari laporan (judul, penerima, atau isi kegiatan)..." autocomplete="off">
+          </label>
+          <select id="arsip-template" aria-label="Filter template">
+            <option value="all">Semua Template</option>
+            <option value="karo_sdm">KARO SDM</option>
+            <option value="karopsi">KAROPSI</option>
+          </select>
+          <select id="arsip-period" aria-label="Filter periode">
+            <option value="all">Semua Periode</option>
+          </select>
+          <button type="button" id="muat-ulang" class="archive-refresh">⟳ <span>Muat ulang</span></button>
         </section>
+
+        <section class="archive-table-card">
+          <div class="archive-table-scroll">
+            <table class="archive-table">
+              <thead><tr>
+                <th class="archive-no">No.</th>
+                <th class="archive-title-col">Judul / Kepada</th>
+                <th>Template</th>
+                <th>Tanggal Laporan</th>
+                <th>Terakhir Diubah</th>
+                <th class="archive-action-col">Aksi</th>
+              </tr></thead>
+              <tbody id="daftar-laporan">
+                <tr><td colspan="6" class="archive-message">Memuat laporan...</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <footer class="archive-footer">
+            <p id="arsip-summary">Menampilkan 0 laporan</p>
+            <nav id="arsip-pagination" class="archive-pagination" aria-label="Navigasi halaman arsip"></nav>
+          </footer>
+        </section>
+        <button type="button" id="buat-laporan-dari-arsip" class="archive-new-report">＋ Buat laporan baru</button>
       </main>
     </div>
 
@@ -298,7 +324,7 @@ Bersama ini disampaikan laporan kegiatan sebagai berikut.</textarea>
     </template>
   </div>
 
-  <script type="module" src="./src/navigation-entry.js?v=8"></script>
-  <script type="module" src="./src/main.js?v=8"></script>
+  <script type="module" src="./src/navigation-entry.js"></script>
+  <script type="module" src="./src/main.js"></script>
 </body>
 </html>

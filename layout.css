@@ -8,7 +8,7 @@
   overflow: hidden;
 }
 .brand { display: flex; align-items: center; gap: 12px; padding: 2px 7px 24px; border-bottom: 1px solid rgba(255,255,255,.12); }
-.brand-mark { flex: 0 0 42px; width: 42px; height: 42px; border: 1px solid rgba(255,255,255,.22); border-radius: 10px; }
+.brand-mark { flex: 0 0 42px; width: 42px; height: 42px; border: 1px solid rgba(255,255,255,.22); border-radius: 12px; font-size: 15px; }
 .brand strong { display: block; color: #fff; font-size: 14px; letter-spacing: .02em; }
 .brand span { display: block; margin-top: 5px; color: #aebfd3; font-size: 9px; font-weight: 700; letter-spacing: .08em; }
 .sidebar-caption { display: block; color: #91a8c2; font-size: 10px; font-weight: 800; letter-spacing: .12em; }
@@ -114,3 +114,93 @@
   .archive-list { grid-template-columns: minmax(0, 1fr); }
   .archive-list-heading { align-items: flex-start; flex-direction: column; }
 }
+
+
+/* Archive page — screenshot-aligned layout */
+.archive-view[hidden] { display:none !important; }
+.archive-view {
+  width: min(1500px, 100%); margin: 0 auto; padding: 30px 28px 48px;
+}
+.archive-heading { margin: 0 0 35px; }
+.archive-heading-main { display:flex; align-items:center; gap:21px; }
+.archive-folder {
+  display:grid; place-items:center; flex:0 0 74px; width:74px; height:74px;
+  border-radius:16px; color:#0870d8; background:#e0efff; font-size:48px; line-height:1;
+}
+.archive-heading h1 { margin:0 0 7px; color:var(--navy); font-size:clamp(27px,2.4vw,34px); letter-spacing:-.04em; }
+.archive-subtitle { margin:0; color:#71839d; font-size:13px; font-weight:800; letter-spacing:.08em; }
+.archive-intro { margin:13px 0 0; color:#2c486b; font-size:15px; }
+.archive-toolbar {
+  display:grid; grid-template-columns:minmax(250px,1fr) 220px 220px 160px;
+  gap:13px; margin-bottom:36px;
+}
+.archive-search {
+  display:flex; align-items:center; gap:11px; min-width:0; height:52px; padding:0 16px;
+  border:1px solid #c9d6e5; border-radius:10px; background:#fff;
+}
+.archive-search > span { color:#435b78; font-size:27px; line-height:1; }
+.archive-search input { width:100%; min-width:0; border:0; outline:0; color:var(--navy); background:transparent; font-size:14px; }
+.archive-search input::placeholder { color:#52647b; opacity:1; }
+.archive-toolbar select {
+  width:100%; height:52px; padding:0 14px; border:1px solid #c9d6e5;
+  border-radius:10px; color:#17283e; background:#fff; font-size:14px; font-weight:600;
+}
+.archive-refresh {
+  display:flex; align-items:center; justify-content:center; gap:9px; min-height:52px;
+  padding:0 15px; border:1px solid #b8d4f8; border-radius:10px; color:#0759b5;
+  background:#fff; font-weight:750;
+}
+.archive-table-card { overflow:hidden; border:1px solid #dce6f1; border-radius:14px; background:#fff; box-shadow:0 8px 22px rgba(20,53,91,.035); }
+.archive-table-scroll { width:100%; overflow-x:auto; }
+.archive-table { width:100%; min-width:960px; border-collapse:collapse; text-align:left; }
+.archive-table thead { background:#f0f5fb; }
+.archive-table th { height:46px; padding:0 17px; color:#203b5e; font-size:13px; font-weight:800; white-space:nowrap; }
+.archive-table td { height:69px; padding:9px 17px; border-top:1px solid #e5edf5; color:#263e5d; font-size:13px; }
+.archive-table th:first-child, .archive-table td:first-child { width:75px; padding-left:21px; font-weight:750; color:#10294b; }
+.archive-table .archive-title-col { width:34%; }
+.archive-table .archive-action-col { width:190px; }
+.archive-report-title { display:block; margin-bottom:4px; color:#10294b; font-weight:800; }
+.archive-recipient { display:block; color:#314965; }
+.archive-tag { display:inline-block; padding:6px 10px; border-radius:6px; font-size:11px; font-weight:800; white-space:nowrap; }
+.archive-tag.tag-karo { color:#0562c5; background:#e1efff; }
+.archive-tag.tag-psi { color:#6418bd; background:#f0e3ff; }
+.archive-date { white-space:nowrap; }
+.archive-row-actions { display:flex; align-items:center; gap:10px; }
+.archive-open, .archive-more {
+  min-height:41px; border:1px solid #83b6f6; border-radius:9px; color:#075cba; background:#fff; font-weight:750;
+}
+.archive-open { min-width:99px; padding:0 13px; }
+.archive-more { width:40px; border-color:#dce6f1; color:#314965; font-size:19px; }
+.archive-open:hover, .archive-more:hover, .archive-refresh:hover { background:#f1f7ff; }
+.archive-message { height:100px !important; text-align:center; color:#73849a !important; }
+.archive-error { color:#b42318 !important; }
+.archive-footer { display:flex; align-items:center; justify-content:space-between; gap:15px; min-height:82px; padding:0 20px; }
+.archive-footer p { margin:0; color:#334d6d; font-size:13px; }
+.archive-pagination { display:flex; align-items:center; gap:6px; }
+.archive-page-button {
+  width:39px; height:40px; border:1px solid #cbd8e7; border-radius:9px;
+  color:#1b3557; background:#fff; font-weight:700;
+}
+.archive-page-button.active { border-color:#0966c9; color:#fff; background:#0966c9; }
+.archive-page-button:disabled { opacity:.4; cursor:default; }
+.archive-new-report { display:none; }
+@media (max-width:1150px) {
+  .archive-toolbar { grid-template-columns:minmax(220px,1fr) 1fr 1fr; }
+  .archive-refresh { grid-column:3; }
+}
+@media (max-width:760px) {
+  .archive-view { padding:20px 14px 32px; }
+  .archive-heading-main { gap:13px; }
+  .archive-folder { flex-basis:55px; width:55px; height:55px; font-size:36px; }
+  .archive-heading h1 { font-size:25px; }
+  .archive-subtitle { font-size:9px; letter-spacing:.04em; }
+  .archive-intro { font-size:13px; line-height:1.5; }
+  .archive-toolbar { grid-template-columns:1fr 1fr; gap:9px; margin-bottom:22px; }
+  .archive-search { grid-column:1 / -1; }
+  .archive-search, .archive-toolbar select, .archive-refresh { height:45px; min-height:45px; font-size:12px; }
+  .archive-refresh { grid-column:auto; }
+  .archive-footer { align-items:flex-start; flex-direction:column; padding:16px; }
+  .archive-pagination { flex-wrap:wrap; }
+}
+/* Override legacy sidebar-history selector: archive list is now a table body. */
+#riwayat-panel #daftar-laporan { display:table-row-group; min-height:0; padding:0; overflow:visible; }

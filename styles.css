@@ -1,7 +1,7 @@
-/* BAGPSI REPORT — stylesheet entry point, cache version 7 */
-@import url('./css/tokens.css?v=7');
-@import url('./css/layout.css?v=7');
-@import url('./css/forms.css?v=7');
-@import url('./css/preview.css?v=7');
-@import url('./css/personnel.css?v=7');
-@import url('./css/responsive.css?v=7');
+/* BAGPSI REPORT — stylesheet entry point */
+@import url('./css/tokens.css');
+@import url('./css/layout.css');
+@import url('./css/forms.css');
+@import url('./css/preview.css');
+@import url('./css/personnel.css');
+@import url('./css/responsive.css');
