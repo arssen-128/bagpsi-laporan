@@ -35,34 +35,3 @@
   .personel-row { align-items: flex-start; flex-direction: column; }
   .personel-row-actions { width: 100%; }
 }
-
-.personel-summary {
-  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
-  align-items: center; gap: 10px; margin: 14px 0 8px;
-}
-.personel-summary > div {
-  display: flex; align-items: center; justify-content: space-between; gap: 8px;
-  padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: #f8fafc;
-}
-.personel-summary > div span { color: var(--muted); font-size: 11px; }
-.personel-summary > div strong { color: var(--navy); font-size: 18px; }
-.personel-filtered-count { color: var(--muted); font-size: 11px; white-space: nowrap; }
-.personel-name-line { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
-.personel-status-badge { padding: 3px 7px; border-radius: 999px; font-size: 9px; font-weight: 800; letter-spacing: .04em; }
-.personel-status-badge.is-active { color: #166534; background: #dcfce7; }
-.personel-status-badge.is-inactive { color: #9a3412; background: #ffedd5; }
-.personel-pagination { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
-.pagination-info { color: var(--muted); font-size: 11px; }
-.pagination-controls { display: flex; align-items: center; gap: 8px; }
-.pagination-controls button { min-height: 34px; padding: 6px 10px; font-size: 11px; }
-.pagination-controls button:disabled { opacity: .45; cursor: not-allowed; }
-.pagination-page { color: var(--navy); font-size: 11px; font-weight: 700; white-space: nowrap; }
-@media (max-width: 760px) {
-  .personel-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .personel-summary > div { align-items: flex-start; flex-direction: column; padding: 9px; }
-  .personel-summary > div span { font-size: 10px; }
-  .personel-summary > div strong { font-size: 17px; }
-  .personel-filtered-count { grid-column: 1 / -1; }
-  .personel-pagination { align-items: flex-start; flex-direction: column; }
-  .pagination-controls { width: 100%; justify-content: space-between; }
-}
