@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --navy: #142b4a;
+  --navy-2: #1c3b62;
+  --blue: #3478c8;
+  --blue-dark: #2866ae;
+  --blue-soft: #edf4fc;
+  --bg: #f3f6fa;
+  --surface: #fff;
+  --line: #dce4ee;
+  --text: #1c2836;
+  --muted: #66778b;
+  --green: #218653;
+  --red: #b33c3c;
+  --sidebar-width: 272px;
+  --shadow: 0 8px 24px rgba(20,43,74,.055);
+}
+* { box-sizing: border-box; }
+html { min-width: 320px; scroll-behavior: smooth; }
+body {
+  margin: 0; min-width: 320px; min-height: 100vh;
+  color: var(--text); background: var(--bg);
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  overflow-x: hidden;
+}
+[hidden] { display: none !important; }
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; }
+#app-shell { min-height: 100vh; }
+#app-shell[hidden] { display: none !important; }
+
+/* Login */
+.auth-screen {
+  min-height: 100vh; display: grid; place-items: center; padding: 24px;
+  background: radial-gradient(circle at 80% 5%, #e1edfb 0, transparent 35%), var(--bg);
+}
+.login-card {
+  width: min(100%, 430px); padding: 34px;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 20px; box-shadow: 0 18px 55px rgba(20,43,74,.10);
+}
+.login-mark, .brand-mark {
+  display: grid; place-items: center; color: white; font-weight: 800;
+  letter-spacing: -.04em; background: linear-gradient(145deg, #397fc9, #17375e);
+}
+.login-mark { width: 52px; height: 52px; margin-bottom: 22px; border-radius: 15px; font-size: 18px; }
+.instansi { margin: 0; color: var(--blue-dark); font-size: 11px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+.login-card h1 { margin: 8px 0; color: var(--navy); font-size: 27px; }
+.auth-help, .catatan, .bantu, .preview-note { color: var(--muted); font-size: 13px; line-height: 1.6; }
+.login-card label { display: block; margin: 16px 0 7px; font-size: 13px; font-weight: 700; }
+.login-card input { width: 100%; }
+.login-card .tombol-utama { width: 100%; margin-top: 20px; }
+.pesan-error { min-height: 18px; color: var(--red); font-size: 13px; }

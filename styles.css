@@ -1,0 +1,7 @@
+/* BAGPSI REPORT — stylesheet entry point */
+@import url('./css/tokens.css');
+@import url('./css/layout.css');
+@import url('./css/forms.css');
+@import url('./css/preview.css');
+@import url('./css/personnel.css');
+@import url('./css/responsive.css');
