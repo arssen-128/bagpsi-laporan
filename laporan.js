@@ -295,10 +295,152 @@
     }).join('\n\n');
   }
 
+  var supabaseClient = null;
+  var currentUser = null;
+  var currentReportId = null;
+  var cloudSaveTimer = null;
+  var isLoadingCloud = false;
+
+  function setCloudStatus(message, isError) {
+    var node = document.getElementById('status-simpan');
+    if (!node) return;
+    node.textContent = message;
+    node.classList.toggle('status-error', !!isError);
+  }
+
+  function judulLaporan(data) {
+    var item = (data.kegiatan || [])[0] || {};
+    return (item.nama || 'Laporan BAGPSI ' + new Date().toLocaleDateString('id-ID')).slice(0, 180);
+  }
+
+  function jadwalkanSimpanCloud() {
+    if (!currentUser || !supabaseClient || isLoadingCloud) return;
+    clearTimeout(cloudSaveTimer);
+    setCloudStatus('Perubahan belum disimpan…');
+    cloudSaveTimer = setTimeout(function () { simpanCloud(false); }, 1200);
+  }
+
+  async function simpanCloud(tampilkanPesan) {
+    if (!currentUser || !supabaseClient) {
+      if (tampilkanPesan) alert('Silakan login terlebih dahulu.');
+      return;
+    }
+    var data = kumpulkan();
+    var payload = {
+      user_id: currentUser.id,
+      judul: judulLaporan(data),
+      jenis: data.jenis,
+      data: data,
+      isi_laporan: susun(data),
+      updated_at: new Date().toISOString()
+    };
+    setCloudStatus('Menyimpan ke database…');
+    var result;
+    if (currentReportId) {
+      result = await supabaseClient.from('laporan_cloud')
+        .update(payload).eq('id', currentReportId).select('id').single();
+    } else {
+      result = await supabaseClient.from('laporan_cloud')
+        .insert(payload).select('id').single();
+    }
+    if (result.error) {
+      console.error('Supabase save error:', result.error);
+      setCloudStatus('Gagal menyimpan: ' + result.error.message, true);
+      if (tampilkanPesan) alert('Laporan belum tersimpan. ' + result.error.message);
+      return;
+    }
+    currentReportId = result.data.id;
+    localStorage.setItem('bagpsi-halaman', JSON.stringify(data));
+    setCloudStatus('Tersimpan online · ' + new Date().toLocaleTimeString('id-ID'));
+    await muatDaftarCloud();
+    if (tampilkanPesan) alert('Laporan berhasil disimpan ke database online.');
+  }
+
+  async function muatDaftarCloud() {
+    var target = document.getElementById('daftar-laporan');
+    if (!target || !currentUser) return;
+    var result = await supabaseClient.from('laporan_cloud')
+      .select('id, judul, jenis, updated_at')
+      .order('updated_at', { ascending: false }).limit(100);
+    if (result.error) {
+      target.textContent = 'Gagal memuat daftar laporan: ' + result.error.message;
+      return;
+    }
+    target.replaceChildren();
+    if (!result.data.length) {
+      var empty = document.createElement('p');
+      empty.className = 'bantu';
+      empty.textContent = 'Belum ada laporan tersimpan di database.';
+      target.appendChild(empty);
+      return;
+    }
+    result.data.forEach(function (item) {
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'item-riwayat';
+      var title = document.createElement('strong');
+      title.textContent = item.judul || 'Laporan tanpa judul';
+      var meta = document.createElement('small');
+      meta.textContent = (item.jenis === 'karopsi' ? 'KAROPSI' : 'KARO SDM') + ' · ' +
+        new Date(item.updated_at).toLocaleString('id-ID');
+      button.append(title, meta);
+      button.addEventListener('click', function () { bukaCloud(item.id); });
+      target.appendChild(button);
+    });
+  }
+
+  async function bukaCloud(id) {
+    var result = await supabaseClient.from('laporan_cloud')
+      .select('id, data').eq('id', id).single();
+    if (result.error) {
+      alert('Laporan tidak dapat dibuka: ' + result.error.message);
+      return;
+    }
+    isLoadingCloud = true;
+    currentReportId = result.data.id;
+    var data = result.data.data || {};
+    daftar.replaceChildren();
+    jenis.value = data.jenis === 'karopsi' ? 'karopsi' : 'karo_sdm';
+    document.getElementById('penerima').value = data.penerima || '';
+    document.getElementById('pembuka').value = data.pembuka || '';
+    document.getElementById('penutup').value = data.penutup || '';
+    var kegiatan = Array.isArray(data.kegiatan) && data.kegiatan.length ? data.kegiatan : [{}];
+    if (jenis.value === 'karo_sdm') kegiatan = kegiatan.slice(0, 1);
+    kegiatan.forEach(function (item) {
+      tambahKartu(true);
+      isiKartu(daftar.lastElementChild, item);
+    });
+    nomor();
+    var restored = kumpulkan();
+    document.getElementById('hasil').textContent = susun(restored);
+    localStorage.setItem('bagpsi-halaman', JSON.stringify(restored));
+    isLoadingCloud = false;
+    setCloudStatus('Laporan dibuka dari database online');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  async function tampilkanAplikasi(session) {
+    var authScreen = document.getElementById('auth-screen');
+    var appShell = document.getElementById('app-shell');
+    currentUser = session && session.user ? session.user : null;
+    if (!currentUser) {
+      authScreen.hidden = false;
+      appShell.hidden = true;
+      return;
+    }
+    authScreen.hidden = true;
+    appShell.hidden = false;
+    document.getElementById('akun-info').textContent = currentUser.email || 'Akun aktif';
+    pulihkan();
+    await muatDaftarCloud();
+    setCloudStatus('Terhubung · simpan laporan untuk menyinkronkan perangkat');
+  }
+
   function gambar() {
     var data = kumpulkan();
     document.getElementById('hasil').textContent = susun(data);
     localStorage.setItem('bagpsi-halaman', JSON.stringify(data));
+    jadwalkanSimpanCloud();
   }
 
   function urut(kartu) {
@@ -373,5 +515,63 @@
     location.reload();
   });
 
-  pulihkan();
+  // Supabase Auth: login diwajibkan sebelum aplikasi laporan ditampilkan.
+  var loginForm = document.getElementById('login-form');
+  var loginError = document.getElementById('login-error');
+  if (!window.supabase || !window.BAGPSI_SUPABASE_URL || !window.BAGPSI_SUPABASE_PUBLISHABLE_KEY) {
+    loginError.textContent = 'Koneksi Supabase belum siap. Periksa koneksi internet dan konfigurasi aplikasi.';
+  } else {
+    supabaseClient = window.supabase.createClient(
+      window.BAGPSI_SUPABASE_URL,
+      window.BAGPSI_SUPABASE_PUBLISHABLE_KEY
+    );
+
+    loginForm.addEventListener('submit', async function (event) {
+      event.preventDefault();
+      var submit = loginForm.querySelector('button[type="submit"]');
+      submit.disabled = true;
+      loginError.textContent = 'Memeriksa akun…';
+      var result = await supabaseClient.auth.signInWithPassword({
+        email: document.getElementById('email-login').value.trim(),
+        password: document.getElementById('password-login').value
+      });
+      submit.disabled = false;
+      if (result.error) {
+        loginError.textContent = 'Login gagal: ' + result.error.message;
+        return;
+      }
+      loginError.textContent = '';
+      await tampilkanAplikasi(result.data.session);
+    });
+
+    document.getElementById('keluar').addEventListener('click', async function () {
+      await supabaseClient.auth.signOut();
+      currentUser = null;
+      currentReportId = null;
+      document.getElementById('app-shell').hidden = true;
+      document.getElementById('auth-screen').hidden = false;
+    });
+    document.getElementById('simpan-cloud').addEventListener('click', function () { simpanCloud(true); });
+    document.getElementById('muat-ulang').addEventListener('click', muatDaftarCloud);
+    document.getElementById('laporan-baru').addEventListener('click', function () {
+      if (!confirm('Mulai laporan baru? Pastikan laporan sebelumnya sudah tersimpan.')) return;
+      currentReportId = null;
+      daftar.replaceChildren();
+      tambahKartu(true);
+      nomor();
+      gambar();
+      setCloudStatus('Laporan baru · belum disimpan');
+    });
+
+    supabaseClient.auth.getSession().then(function (result) {
+      if (result.error) {
+        loginError.textContent = 'Tidak dapat memeriksa sesi: ' + result.error.message;
+        return;
+      }
+      tampilkanAplikasi(result.data.session);
+    });
+    supabaseClient.auth.onAuthStateChange(function (event, session) {
+      if (event === 'SIGNED_OUT') tampilkanAplikasi(null);
+    });
+  }
 })();
