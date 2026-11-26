@@ -525,6 +525,8 @@
       window.BAGPSI_SUPABASE_URL,
       window.BAGPSI_SUPABASE_PUBLISHABLE_KEY
     );
+    // Bagikan client agar personel.js memakai koneksi dan sesi Supabase yang sama.
+    window.BAGPSI_SUPABASE_CLIENT = supabaseClient;
 
     loginForm.addEventListener('submit', async function (event) {
       event.preventDefault();
