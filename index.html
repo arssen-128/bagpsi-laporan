@@ -3,109 +3,243 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#142b4a">
   <title>BAGPSI REPORT</title>
   <link rel="stylesheet" href="gaya.css">
 </head>
 <body>
+  <!-- LOGIN: ID dipertahankan agar tetap terhubung dengan laporan.js -->
   <section id="auth-screen" class="auth-screen">
     <form id="login-form" class="login-card">
+      <div class="login-mark">BR</div>
       <p class="instansi">BAGPSI RO SDM POLDA BANTEN</p>
       <h1>Masuk BAGPSI REPORT</h1>
       <p class="auth-help">Gunakan akun yang terdaftar pada Supabase Authentication.</p>
       <label for="email-login">Email</label>
-      <input id="email-login" type="email" autocomplete="username" required>
+      <input id="email-login" type="email" autocomplete="username" placeholder="Alamat email" required>
       <label for="password-login">Password</label>
-      <input id="password-login" type="password" autocomplete="current-password" required>
+      <input id="password-login" type="password" autocomplete="current-password" placeholder="Password" required>
       <button type="submit" class="tombol-utama">Masuk</button>
       <p id="login-error" class="pesan-error" role="alert"></p>
     </form>
   </section>
 
   <div id="app-shell" hidden>
-  <nav class="bar-akun">
-    <span id="akun-info">Terhubung</span>
-    <span id="status-simpan" aria-live="polite">Belum tersimpan</span>
-    <button type="button" id="simpan-cloud" class="tombol-utama">Simpan laporan</button>
-    <button type="button" id="laporan-baru" class="garis">Laporan baru</button>
-    <button type="button" id="keluar" class="garis">Keluar</button>
-  </nav>
-  <aside class="panel-riwayat">
-    <h2>Laporan tersimpan</h2>
-    <button type="button" id="muat-ulang" class="garis">Muat ulang</button>
-    <div id="daftar-laporan"><p class="bantu">Memuat laporan...</p></div>
-  </aside>
-  <header class="atas">
-    <div>
-      <p class="instansi">Bagpsi Ro SDM Polda Banten</p>
-      <h1>Buat Laporan</h1>
-    </div>
-    <p class="catatan">Laporan tersimpan di database online dan dapat dibuka dari perangkat lain setelah login dengan akun yang sama.</p>
-    <button type="button" class="garis" id="baru">Hapus draf di HP ini</button>
-  </header>
-  <main class="lembar">
-    <section class="kartu">
-      <label for="jenis">Jenis laporan</label>
-      <select id="jenis">
-        <option value="karo_sdm">KARO SDM</option>
-        <option value="karopsi">KAROPSI</option>
-      </select>
-      <label for="penerima">Penerima</label>
-      <input id="penerima" value="Yth. KARO SDM POLDA BANTEN">
-      <label for="pembuka">Salam pembuka</label>
-      <textarea id="pembuka">Dengan hormat,
+    <button type="button" id="sidebar-backdrop" class="sidebar-backdrop" aria-label="Tutup menu"></button>
+
+    <aside id="sidebar" class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">BR</div>
+        <div>
+          <strong>BAGPSI REPORT</strong>
+          <span>RO SDM POLDA BANTEN</span>
+        </div>
+      </div>
+
+      <div class="sidebar-caption">MENU UTAMA</div>
+      <nav class="side-nav" aria-label="Navigasi utama">
+        <a class="side-link active" href="#area-editor" data-close-sidebar>
+          <span class="side-icon">▤</span><span>Buat laporan</span>
+        </a>
+        <a class="side-link" href="#riwayat-panel" data-close-sidebar>
+          <span class="side-icon">▣</span><span>Laporan tersimpan</span>
+        </a>
+        <a class="side-link" href="#area-preview" data-close-sidebar>
+          <span class="side-icon">≡</span><span>Pratinjau teks</span>
+        </a>
+      </nav>
+
+      <section id="riwayat-panel" class="sidebar-history">
+        <div class="history-heading">
+          <div>
+            <span class="sidebar-caption">ARSIP ONLINE</span>
+            <h2>Laporan tersimpan</h2>
+          </div>
+          <button type="button" id="muat-ulang" class="icon-button" aria-label="Muat ulang daftar laporan" title="Muat ulang">↻</button>
+        </div>
+        <div id="daftar-laporan">
+          <p class="bantu">Memuat laporan...</p>
+        </div>
+      </section>
+
+      <div class="sidebar-footer">
+        <span class="status-dot"></span>
+        <span>Terhubung ke BAGPSI REPORT</span>
+      </div>
+    </aside>
+
+    <div class="main-area">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button type="button" id="sidebar-toggle" class="menu-toggle" aria-label="Buka menu" aria-expanded="false">☰</button>
+          <div class="account-block">
+            <span class="account-label">AKUN AKTIF</span>
+            <strong id="akun-info">Terhubung</strong>
+            <span id="status-simpan" aria-live="polite">Belum tersimpan</span>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <button type="button" id="laporan-baru" class="button-secondary">＋ Laporan baru</button>
+          <button type="button" id="simpan-cloud" class="tombol-utama">Simpan laporan</button>
+          <button type="button" id="keluar" class="button-quiet">Keluar</button>
+        </div>
+      </header>
+
+      <div class="content-grid">
+        <main id="area-editor" class="editor-column">
+          <header class="page-heading">
+            <div>
+              <p class="instansi">BAGPSI RO SDM POLDA BANTEN</p>
+              <h1>Buat Laporan</h1>
+              <p class="catatan">Susun laporan kegiatan, tambahkan pelaksana, lalu simpan agar dapat dibuka dari perangkat lain.</p>
+            </div>
+            <button type="button" class="button-outline" id="baru">Hapus draf di perangkat ini</button>
+          </header>
+
+          <section class="kartu report-settings">
+            <div class="section-heading">
+              <div>
+                <span class="section-kicker">PENGATURAN DOKUMEN</span>
+                <h2>Identitas laporan</h2>
+              </div>
+            </div>
+            <div class="field-grid">
+              <div class="field">
+                <label for="jenis">Jenis laporan</label>
+                <select id="jenis">
+                  <option value="karo_sdm">KARO SDM</option>
+                  <option value="karopsi">KAROPSI</option>
+                </select>
+              </div>
+              <div class="field field-full">
+                <label for="penerima">Kepada / Penerima</label>
+                <input id="penerima" value="Yth. KARO SDM POLDA BANTEN">
+              </div>
+              <div class="field field-full">
+                <label for="pembuka">Salam pembuka</label>
+                <textarea id="pembuka">Dengan hormat,
 Bersama ini disampaikan laporan kegiatan sebagai berikut.</textarea>
-      <label for="penutup">Salam penutup</label>
-      <textarea id="penutup">Demikian disampaikan, atas perhatiannya diucapkan terima kasih.</textarea>
-    </section>
-    <div id="daftar"></div>
-    <button type="button" class="garis" id="tambah">Tambah kegiatan</button>
-  </main>
-  <aside class="pratinjau">
-    <div class="kepala-pratinjau">
-      <h2>Teks laporan</h2>
-      <button type="button" id="salin">Salin</button>
+              </div>
+              <div class="field field-full">
+                <label for="penutup">Salam penutup</label>
+                <textarea id="penutup">Demikian disampaikan, atas perhatiannya diucapkan terima kasih.</textarea>
+              </div>
+            </div>
+          </section>
+
+          <div id="daftar"></div>
+          <div class="add-activity-row">
+            <button type="button" class="button-outline" id="tambah">＋ Tambah kegiatan</button>
+            <span class="bantu">Isi setiap bagian sesuai pelaksanaan kegiatan.</span>
+          </div>
+        </main>
+
+        <aside id="area-preview" class="preview-column">
+          <div class="preview-sticky">
+            <div class="preview-heading">
+              <div>
+                <span class="section-kicker">LIVE PREVIEW</span>
+                <h2>Teks laporan</h2>
+              </div>
+              <button type="button" id="salin" class="tombol-utama">Salin teks</button>
+            </div>
+            <p class="preview-note">Pratinjau akan berubah otomatis saat isian diperbarui.</p>
+            <pre id="hasil"></pre>
+          </div>
+        </aside>
+      </div>
     </div>
-    <pre id="hasil"></pre>
-  </aside>
-  <template id="tpl">
-    <article class="kartu kegiatan">
-      <div class="baris-judul">
-        <h2 class="judul-kegiatan">Kegiatan</h2>
-        <button type="button" class="teks hapus">Hapus</button>
-      </div>
-      <label>Nama kegiatan</label>
-      <input class="nama">
-      <div class="empat">
-        <div><label>Tanggal</label><input class="tanggal" type="date"></div>
-        <div><label>Hari</label><input class="hari" readonly></div>
-        <div><label>Jam mulai</label><div class="jam mulai"></div></div>
-        <div><label>Jam selesai</label><div class="jam selesai"></div><label class="centang"><input class="hingga" type="checkbox"> Hingga selesai</label></div>
-      </div>
-      <label>Lokasi</label>
-      <input class="lokasi">
-      <label>Uraian</label>
-      <textarea class="uraian"></textarea>
-      <label>Hasil</label>
-      <textarea class="hasil"></textarea>
-      <h3>Pelaksana</h3>
-      <p class="bantu">Ketik anggota yang tidak ada di database. Urutan mengikuti pangkat, lalu nama.</p>
-      <div class="empat orang">
-        <select class="pangkat"></select>
-        <input class="nama-orang" placeholder="Nama">
-        <input class="gelar" placeholder="Gelar, kalau ada">
-        <input class="jabatan" placeholder="Jabatan">
-      </div>
-      <button type="button" class="garis tambah-orang">Tambah pelaksana</button>
-      <div class="terpilih"></div>
-    </article>
-  </template>
+
+    <template id="tpl">
+      <article class="kartu kegiatan">
+        <div class="activity-heading">
+          <div>
+            <span class="section-kicker">RINCIAN KEGIATAN</span>
+            <h2 class="judul-kegiatan">Kegiatan</h2>
+          </div>
+          <button type="button" class="teks hapus">Hapus kegiatan</button>
+        </div>
+        <div class="field-grid">
+          <div class="field field-full">
+            <label>Nama kegiatan</label>
+            <input class="nama" placeholder="Nama atau judul kegiatan">
+          </div>
+          <div class="field-grid field-grid-four field-full">
+            <div class="field"><label>Tanggal</label><input class="tanggal" type="date"></div>
+            <div class="field"><label>Hari</label><input class="hari" readonly placeholder="Otomatis"></div>
+            <div class="field"><label>Jam mulai</label><div class="jam mulai"></div></div>
+            <div class="field"><label>Jam selesai</label><div class="jam selesai"></div><label class="centang"><input class="hingga" type="checkbox"> Hingga selesai</label></div>
+          </div>
+          <div class="field field-full">
+            <label>Tempat / Lokasi</label>
+            <input class="lokasi" placeholder="Tempat pelaksanaan kegiatan">
+          </div>
+          <div class="field field-full">
+            <label>Uraian kegiatan</label>
+            <textarea class="uraian" placeholder="Uraikan rangkaian kegiatan..."></textarea>
+          </div>
+          <div class="field field-full">
+            <label>Hasil kegiatan</label>
+            <textarea class="hasil" placeholder="Tuliskan hasil kegiatan..."></textarea>
+          </div>
+        </div>
+
+        <div class="personnel-section">
+          <div>
+            <h3>Pelaksana</h3>
+            <p class="bantu">Tambahkan personel yang mengikuti kegiatan. Urutan mengikuti pangkat, lalu nama.</p>
+          </div>
+          <div class="field-grid field-grid-four personnel-fields">
+            <div class="field"><label>Pangkat</label><select class="pangkat"></select></div>
+            <div class="field"><label>Nama</label><input class="nama-orang" placeholder="Nama personel"></div>
+            <div class="field"><label>Gelar</label><input class="gelar" placeholder="Jika ada"></div>
+            <div class="field"><label>Jabatan</label><input class="jabatan" placeholder="Jabatan"></div>
+          </div>
+          <button type="button" class="button-outline tambah-orang">＋ Tambah pelaksana</button>
+          <div class="terpilih"></div>
+        </div>
+      </article>
+    </template>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // Project URL dan Publishable Key boleh digunakan pada frontend.
-    // Jangan pernah menaruh Secret Key / service_role key di file ini.
+    // Publishable key boleh digunakan di frontend. Jangan masukkan Secret/service_role key.
     window.BAGPSI_SUPABASE_URL = "https://mdxyaowbbnprqvmqmkps.supabase.co";
     window.BAGPSI_SUPABASE_PUBLISHABLE_KEY = "sb_publishable_vhiB4iyFbuKTMXE6HuXSMQ_GTM4i1d4";
   </script>
   <script src="laporan.js"></script>
-  </div>\n</body>
+  <script>
+    (function () {
+      var shell = document.getElementById('app-shell');
+      var toggle = document.getElementById('sidebar-toggle');
+      var backdrop = document.getElementById('sidebar-backdrop');
+      var sidebar = document.getElementById('sidebar');
+
+      function closeSidebar() {
+        if (!shell) return;
+        shell.classList.remove('sidebar-open');
+        if (toggle) toggle.setAttribute('aria-expanded', 'false');
+      }
+      function openSidebar() {
+        if (!shell) return;
+        shell.classList.add('sidebar-open');
+        if (toggle) toggle.setAttribute('aria-expanded', 'true');
+      }
+      if (toggle) toggle.addEventListener('click', function () {
+        shell.classList.contains('sidebar-open') ? closeSidebar() : openSidebar();
+      });
+      if (backdrop) backdrop.addEventListener('click', closeSidebar);
+      document.querySelectorAll('[data-close-sidebar]').forEach(function (link) {
+        link.addEventListener('click', closeSidebar);
+      });
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') closeSidebar();
+      });
+      if (sidebar) sidebar.addEventListener('click', function (event) {
+        if (event.target.closest('button.item-riwayat')) closeSidebar();
+      });
+    })();
+  </script>
+</body>
 </html>
