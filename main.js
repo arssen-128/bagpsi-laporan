@@ -3,6 +3,7 @@ import { createReportEditor } from "./features/report-editor.js";
 import { createCloudReports } from "./features/cloud-reports.js";
 import { createPersonnelModule } from "./features/personnel.js";
 import { createAuth } from "./features/auth.js";
+import { initNavigation } from "./features/navigation.js";
 import { byId, setStatus } from "./utils/dom.js";
 
 async function startApplication() {
@@ -43,6 +44,7 @@ async function startApplication() {
     });
 
     editor.init();
+    initNavigation();
     await auth.init();
 
     // Pastikan tidak ada event handler ganda: auth module mengelola satu subscription.

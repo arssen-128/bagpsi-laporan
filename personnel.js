@@ -5,6 +5,8 @@ export function createPersonnelModule({ client }) {
   let currentUser = null;
   let isAdmin = false;
   let records = [];
+  let currentPage = 1;
+  const PAGE_SIZE = 12;
 
   const panel = byId("master-personel");
   const contentGrid = document.querySelector(".content-grid");
@@ -75,31 +77,73 @@ export function createPersonnelModule({ client }) {
     form.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
-  function renderList() {
+  function getFilteredRecords() {
     const query = (byId("cari-personel").value || "").trim().toLocaleLowerCase("id");
     const filter = byId("filter-status-personel").value;
-    const visible = records.filter((person) => {
+    return records.filter((person) => {
       const statusMatch = filter === "semua" || person.status === filter;
       const haystack = [person.nrp, person.pangkat, person.nama, person.gelar, person.jabatan, person.bagian]
         .filter(Boolean).join(" ").toLocaleLowerCase("id");
       return statusMatch && (!query || haystack.includes(query));
     });
+  }
 
+  function renderSummary(visible) {
+    const active = records.filter((person) => person.status === "aktif").length;
+    const inactive = records.length - active;
+    byId("personel-count-total").textContent = String(records.length);
+    byId("personel-count-active").textContent = String(active);
+    byId("personel-count-inactive").textContent = String(inactive);
+    byId("personel-count-filtered").textContent = `${visible.length} hasil`;
+  }
+
+  function renderPagination(totalPages, totalItems) {
+    const pagination = byId("personel-pagination");
+    pagination.replaceChildren();
+    if (!totalItems) return;
+
+    const start = (currentPage - 1) * PAGE_SIZE + 1;
+    const end = Math.min(currentPage * PAGE_SIZE, totalItems);
+    const info = createElement("span", "pagination-info", `Menampilkan ${start}–${end} dari ${totalItems} personel`);
+    const controls = createElement("div", "pagination-controls");
+    const previous = createElement("button", "button-outline", "‹ Sebelumnya");
+    previous.type = "button";
+    previous.disabled = currentPage <= 1;
+    previous.addEventListener("click", () => { currentPage -= 1; renderList(); });
+    const pageLabel = createElement("span", "pagination-page", `Halaman ${currentPage} / ${totalPages}`);
+    const next = createElement("button", "button-outline", "Berikutnya ›");
+    next.type = "button";
+    next.disabled = currentPage >= totalPages;
+    next.addEventListener("click", () => { currentPage += 1; renderList(); });
+    controls.append(previous, pageLabel, next);
+    pagination.append(info, controls);
+  }
+
+  function renderList() {
+    const visible = getFilteredRecords();
+    const totalPages = Math.max(1, Math.ceil(visible.length / PAGE_SIZE));
+    currentPage = Math.min(Math.max(1, currentPage), totalPages);
+    const startIndex = (currentPage - 1) * PAGE_SIZE;
+    const pageRecords = visible.slice(startIndex, startIndex + PAGE_SIZE);
+
+    renderSummary(visible);
     listNode.replaceChildren();
     if (!visible.length) {
       listNode.append(createElement("div", "personel-empty", "Tidak ada data personel yang cocok."));
+      renderPagination(0, 0);
       return;
     }
 
-    visible.forEach((person) => {
+    pageRecords.forEach((person) => {
       const row = createElement("div", "personel-row");
       const main = createElement("div", "personel-row-main");
-      main.append(
-        createElement("strong", "", `${person.pangkat} ${person.nama}`),
+      const nameLine = createElement("div", "personel-name-line");
+      nameLine.append(createElement("strong", "", `${person.pangkat} ${person.nama}`));
+      nameLine.append(createElement("span", `personel-status-badge ${person.status === "aktif" ? "is-active" : "is-inactive"}`, person.status === "aktif" ? "AKTIF" : "NONAKTIF"));
+      main.append(nameLine,
         createElement("small", "", [
           person.gelar, person.jabatan, person.bagian,
-          person.nrp ? `NRP ${person.nrp}` : "",
-          person.status === "aktif" ? "Aktif" : "Nonaktif"
+          person.nrp ? `NRP ${person.nrp}` : ""
         ].filter(Boolean).join(" · "))
       );
       row.append(main);
@@ -117,6 +161,7 @@ export function createPersonnelModule({ client }) {
       }
       listNode.append(row);
     });
+    renderPagination(totalPages, visible.length);
   }
 
   async function changeStatus(person) {
@@ -199,6 +244,7 @@ export function createPersonnelModule({ client }) {
       return;
     }
     records = data || [];
+    currentPage = 1;
     refreshActivitySelects();
     renderList();
     status(`${records.length} data personel tersedia di database online.`);
@@ -242,10 +288,27 @@ export function createPersonnelModule({ client }) {
     byId("tutup-master-personel").addEventListener("click", hideMaster);
     form.addEventListener("submit", savePerson);
     byId("batal-edit-personel").addEventListener("click", clearForm);
-    byId("cari-personel").addEventListener("input", renderList);
-    byId("filter-status-personel").addEventListener("change", renderList);
+    byId("cari-personel").addEventListener("input", () => { currentPage = 1; renderList(); });
+    byId("filter-status-personel").addEventListener("change", () => { currentPage = 1; renderList(); });
     document.body.addEventListener("change", (event) => {
       if (event.target.classList.contains("pilih-master-personel")) fillSelectedPerson(event.target);
+    });
+
+    // Sinkronkan dropdown personel pada setiap kartu kegiatan yang baru dibuat.
+    // Penting saat pengguna berpindah template KARO SDM ke KAROPSI atau sebaliknya.
+    document.addEventListener("bagpsi:activity-added", (event) => {
+      const card = event.detail?.card;
+      const select = card?.querySelector(".pilih-master-personel");
+      if (!select) return;
+      const oldValue = select.value;
+      select.replaceChildren(new Option(records.length ? "Pilih personel…" : "Belum ada personel aktif", ""));
+      records.filter((person) => person.status === "aktif").forEach((person) => {
+        const label = `${person.pangkat} ${person.nama}${person.jabatan ? ` — ${person.jabatan}` : ""}`;
+        select.add(new Option(label, person.id));
+      });
+      if (oldValue && records.some((person) => person.id === oldValue && person.status === "aktif")) {
+        select.value = oldValue;
+      }
     });
   }
 

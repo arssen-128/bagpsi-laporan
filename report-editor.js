@@ -39,6 +39,7 @@ function addPersonToCard(card, person) {
   item.dataset.nama = person.nama;
   item.dataset.gelar = person.gelar || "";
   item.dataset.jabatan = person.jabatan || "";
+  item.dataset.personelId = person.personel_id || person.id || "";
 
   const info = document.createElement("div");
   const name = document.createElement("b");
@@ -122,6 +123,10 @@ export function createReportEditor({ onChange = () => {} } = {}) {
     list.append(card);
     if (data) fillCard(card, data);
     updateNumbers();
+    // Beri tahu modul personel bahwa kartu kegiatan baru sudah masuk DOM.
+    // Ini memastikan dropdown master personel ikut diisi ulang saat template
+    // KARO SDM/KAROPSI diganti atau pengguna menambah kegiatan.
+    document.dispatchEvent(new CustomEvent("bagpsi:activity-added", { detail: { card } }));
     if (!silent) notifyChange();
     return card;
   }
@@ -145,7 +150,8 @@ export function createReportEditor({ onChange = () => {} } = {}) {
           pangkat: node.dataset.pangkat,
           nama: node.dataset.nama,
           gelar: node.dataset.gelar,
-          jabatan: node.dataset.jabatan
+          jabatan: node.dataset.jabatan,
+          personel_id: node.dataset.personelId || null
         }))
       }))
     };
@@ -231,13 +237,21 @@ export function createReportEditor({ onChange = () => {} } = {}) {
       if (event.target.classList.contains("tambah-orang")) {
         const rank = card.querySelector(".pangkat").value;
         const name = card.querySelector(".nama-orang").value.trim();
+        const masterSelect = card.querySelector(".pilih-master-personel");
+        const personelId = masterSelect?.value || "";
         if (!rank || !name) return;
+        if (personelId && [...card.querySelectorAll(".orang-item")].some((node) => node.dataset.personelId === personelId)) {
+          alert("Personel tersebut sudah ditambahkan pada kegiatan ini.");
+          return;
+        }
         addPersonToCard(card, {
+          personel_id: personelId || null,
           pangkat: rank,
           nama: name,
           gelar: card.querySelector(".gelar").value.trim(),
           jabatan: card.querySelector(".jabatan").value.trim()
         });
+        if (masterSelect) masterSelect.value = "";
         card.querySelector(".pangkat").value = "";
         card.querySelector(".nama-orang").value = "";
         card.querySelector(".gelar").value = "";
