@@ -184,15 +184,76 @@
     }).join('\n');
   }
 
+  
+
   function susun(data) {
     var blok = [];
-    if (data.penerima.trim()) blok.push(data.penerima.trim(), '');
-    if (data.pembuka.trim()) blok.push(data.pembuka.trim(), '');
-    var isi = data.jenis === 'karopsi' ? karopsi(data.kegiatan) : karo(data.kegiatan[0] || {});
+
+    // =====================================
+    // HEADER WAJIB LAPORAN BAGPSI
+    // =====================================
+
+    blok.push(
+        '*KEPADA:*',
+        (data.penerima || 'Yth. KARO SDM POLDA BANTEN').trim(),
+        '',
+        '*DARI:*',
+        'KABAGPSI RO SDM POLDA BANTEN',
+        '',
+        '*PERIHAL:*',
+        '',
+        '*LAPORAN KEGIATAN BAGPSI RO SDM POLDA BANTEN*',
+        '',
+        '*TEMBUSAN:*',
+        '1. Psikolog Utama Ropsi SSDM Polri;',
+        '2. Para Kabag di lingkungan Ropsi SSDM Polri;',
+        '3. Psikolog Madya Ropsi SSDM Polri.',
+        '',
+        'Assalamualaikum Wr. Wb.',
+        'Salam sejahtera untuk kita semua.',
+        'Om Swastyastu.',
+        'Namo Buddhaya.',
+        'Salam Kebajikan.',
+        ''
+    );
+
+    // =====================================
+    // ISI LAPORAN
+    // =====================================
+
+    var isi = data.jenis === 'karopsi'
+        ? karopsi(data.kegiatan)
+        : karo(data.kegiatan[0] || {});
+
     if (isi) blok.push(isi);
-    if (data.penutup.trim()) blok.push('', data.penutup.trim());
-    return blok.join('\n').trim() + (blok.length ? '\n' : '');
-  }
+
+    // =====================================
+    // PENUTUP
+    // =====================================
+
+    if (data.penutup && data.penutup.trim()) {
+        blok.push('', data.penutup.trim());
+    }
+
+    // =====================================
+    // SLOGAN RESMI BAGPSI
+    // =====================================
+
+    blok.push(
+        '',
+        'DUMM',
+        '',
+        'KABAGPSI RO SDM POLDA BANTEN',
+        '',
+        'SDM BERKEUNGGULAN',
+        'POLISI BERSAMA MASYARAKAT',
+        'INDONESIA MAJU'
+    );
+
+    return blok.join('\n').trim() + '\n';
+}
+
+
 
   function waktu(item) {
     var baris = [];

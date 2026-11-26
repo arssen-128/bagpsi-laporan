@@ -60,3 +60,25 @@ button, .garis {
   .pratinjau { position: static; height: auto; }
   .empat { grid-template-columns: 1fr 1fr; }
 }
+
+[hidden] { display: none !important; }
+.auth-screen { grid-column: 1 / -1; min-height: 100vh; display: grid; place-items: center; padding: 24px; background: #f5f7fa; }
+.login-card { width: min(100%, 420px); padding: 28px; background: #fff; border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 12px 36px rgba(20,43,74,.08); }
+.login-card h1 { font-size: 26px; }
+.auth-help { color: #5d6b7b; font-size: 14px; }
+.tombol-utama { background: var(--accent); color: #fff; }
+.login-card .tombol-utama { width: 100%; margin-top: 18px; }
+.pesan-error { color: #a33b3b; font-size: 13px; }
+.bar-akun { grid-column: 1 / -1; display:flex; flex-wrap:wrap; gap:10px; align-items:center; padding:12px 24px; background:#fff; border-bottom:1px solid var(--line); position:sticky; top:0; z-index:5; }
+#status-simpan { color:#237447; font-size:13px; margin-right:auto; }
+#status-simpan.status-error { color:#a33b3b; }
+.panel-riwayat { grid-column:1; padding: 0 28px; }
+.panel-riwayat h2 { display:inline-block; margin: 8px 12px 8px 0; }
+#daftar-laporan { display:flex; flex-wrap:wrap; gap:8px; margin:8px 0 16px; }
+.item-riwayat { display:flex; flex-direction:column; align-items:flex-start; gap:4px; max-width:260px; text-align:left; background:#fff; border:1px solid var(--line); border-radius:10px; padding:10px 12px; color:var(--text); }
+.item-riwayat small { color:#64748b; }
+@media (max-width:980px) {
+  .bar-akun { position:static; }
+  .panel-riwayat { padding: 0 18px; }
+  .bar-akun { padding:12px 18px; }
+}

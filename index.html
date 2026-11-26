@@ -7,12 +7,39 @@
   <link rel="stylesheet" href="gaya.css">
 </head>
 <body>
+  <section id="auth-screen" class="auth-screen">
+    <form id="login-form" class="login-card">
+      <p class="instansi">BAGPSI RO SDM POLDA BANTEN</p>
+      <h1>Masuk BAGPSI REPORT</h1>
+      <p class="auth-help">Gunakan akun yang terdaftar pada Supabase Authentication.</p>
+      <label for="email-login">Email</label>
+      <input id="email-login" type="email" autocomplete="username" required>
+      <label for="password-login">Password</label>
+      <input id="password-login" type="password" autocomplete="current-password" required>
+      <button type="submit" class="tombol-utama">Masuk</button>
+      <p id="login-error" class="pesan-error" role="alert"></p>
+    </form>
+  </section>
+
+  <div id="app-shell" hidden>
+  <nav class="bar-akun">
+    <span id="akun-info">Terhubung</span>
+    <span id="status-simpan" aria-live="polite">Belum tersimpan</span>
+    <button type="button" id="simpan-cloud" class="tombol-utama">Simpan laporan</button>
+    <button type="button" id="laporan-baru" class="garis">Laporan baru</button>
+    <button type="button" id="keluar" class="garis">Keluar</button>
+  </nav>
+  <aside class="panel-riwayat">
+    <h2>Laporan tersimpan</h2>
+    <button type="button" id="muat-ulang" class="garis">Muat ulang</button>
+    <div id="daftar-laporan"><p class="bantu">Memuat laporan...</p></div>
+  </aside>
   <header class="atas">
     <div>
       <p class="instansi">Bagpsi Ro SDM Polda Banten</p>
       <h1>Buat Laporan</h1>
     </div>
-    <p class="catatan">Draf tersimpan di HP ini saja. HP lain tidak melihatnya. Saat halaman dibuka lagi, isian yang sama muncul kembali.</p>
+    <p class="catatan">Laporan tersimpan di database online dan dapat dibuka dari perangkat lain setelah login dengan akun yang sama.</p>
     <button type="button" class="garis" id="baru">Hapus draf di HP ini</button>
   </header>
   <main class="lembar">
@@ -72,6 +99,13 @@ Bersama ini disampaikan laporan kegiatan sebagai berikut.</textarea>
       <div class="terpilih"></div>
     </article>
   </template>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // Project URL dan Publishable Key boleh digunakan pada frontend.
+    // Jangan pernah menaruh Secret Key / service_role key di file ini.
+    window.BAGPSI_SUPABASE_URL = "https://mdxyaowbbnprqvmqmkps.supabase.co";
+    window.BAGPSI_SUPABASE_PUBLISHABLE_KEY = "sb_publishable_vhiB4iyFbuKTMXE6HuXSMQ_GTM4i1d4";
+  </script>
   <script src="laporan.js"></script>
-</body>
+  </div>\n</body>
 </html>
